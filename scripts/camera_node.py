@@ -3,42 +3,63 @@
 import cv2
 import rospy
 from aruco import ArUco
-from geometry_msgs.msg import Pose
-
-from cinema_bot.srv import GuestAPI
+from geometry_msgs.msg import Pose, Point, Quaternion
+from cinema_bot.srv import GuestAPI, GuestAPIResponse
 
 
 def camera_node(): # node name
     pub = rospy.Publisher('/SeatLocation', Pose, queue_size=10)
-    rospy.init_node('camera_node', anonymous=True)
+    rospy.init_node('camera_node')
     rate = rospy.Rate(10) # 10hz
 
     cap = cv2.VideoCapture(0)
-
-    print("camera node running")
+        
     while not rospy.is_shutdown():
-        ret, frame = cap.read()
-        frame = cv2.resize(frame, (1280, 720))
-        corners, ids = ArUco.detectAruco(
-            frame, marker_size=5, total_markers=50)
+        robotStatus = rospy.get_param('RobotStatus','Free')
 
-        if len(ids) > 0: #aruco detected
-            pose_response = callGuestAPI(str(ids[0]))
-            pub.publish(pose_response)
+        if robotStatus != "Serving":
+            ret, frame = cap.read()
+            frame = cv2.resize(frame, (1280, 720))
+            id = ArUco.detectArucoID(
+                frame, marker_size=5, total_markers=50)
 
-
-    cap.release()
-    cv2.destroyAllWindows()
+            if id == None:
+                print("no id")
+            else: #aruco detected
+                print(id)
+                pose_response = callGuestAPI(str(id))
+                location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
+                rospy.set_param('RobotStatus', 'Serving') #set RobotStatus
+                pub.publish(location_pub)
+        
+        if cv2.waitKey(1) == ord('q'):
+            break
+        rate.sleep()
 
 def callGuestAPI(id):
     try:
-            guestAPI = rospy.ServiceProxy('GuestAPI', GuestAPI)
-            response = guestAPI(id)
-            return response
+        guestAPI = rospy.ServiceProxy('guest_api', GuestAPI)
+        response = guestAPI(id)
+        return response
     except rospy.ServiceException as e:
             print("GuestAPI call failed: %s"%e)
 
-if __name__ == "main":
+def parseDataFromGuestAPIResponseToPose(location):
+    return Pose(
+        Point(
+            location.position.x,
+            location.position.y,
+            location.position.z
+        ),
+        Quaternion(
+            location.orientation.x,
+            location.orientation.y,
+            location.orientation.z,
+            location.orientation.w
+        )
+    )
+
+if __name__ == "__main__":
     try:
         camera_node()
     except rospy.ROSInterruptException:
