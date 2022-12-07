@@ -1,17 +1,21 @@
-from aruco import ArUco
+#!/usr/bin/env python3
+
 import cv2
 import rospy
+from aruco import ArUco
 from geometry_msgs.msg import Pose
+
 from cinema_bot.srv import GuestAPI
 
 
-
-def camera_node(path_type): # node name
+def camera_node(): # node name
     pub = rospy.Publisher('/SeatLocation', Pose, queue_size=10)
     rospy.init_node('camera_node', anonymous=True)
     rate = rospy.Rate(10) # 10hz
+
     cap = cv2.VideoCapture(0)
 
+    print("camera node running")
     while not rospy.is_shutdown():
         ret, frame = cap.read()
         frame = cv2.resize(frame, (1280, 720))
@@ -24,7 +28,7 @@ def camera_node(path_type): # node name
 
 
     cap.release()
-    cv.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 def callGuestAPI(id):
     try:
@@ -34,3 +38,8 @@ def callGuestAPI(id):
     except rospy.ServiceException as e:
             print("GuestAPI call failed: %s"%e)
 
+if __name__ == "main":
+    try:
+        camera_node()
+    except rospy.ROSInterruptException:
+        pass

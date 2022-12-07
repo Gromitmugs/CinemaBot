@@ -1,8 +1,9 @@
-import numpy as np
+import sys
+
 import cv2
 import cv2.aruco as aruco
-from imutils.video import VideoStream
-import sys
+import numpy as np
+
 
 class ArUco:
     def detectAruco(frame, marker_size=6, total_markers=250):

@@ -1,0 +1,4 @@
+string arucoId
+---
+geometry_msgs/Pose seatLocation
+string guestName 
