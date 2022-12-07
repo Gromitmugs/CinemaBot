@@ -26,9 +26,6 @@ def camera_node(path_type): # node name
     cap.release()
     cv.destroyAllWindows()
 
-
-
-
 def callGuestAPI(id):
     try:
             guestAPI = rospy.ServiceProxy('GuestAPI', GuestAPI)
