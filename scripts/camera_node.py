@@ -13,22 +13,23 @@ def camera_node(): # node name
     rate = rospy.Rate(10) # 10hz
 
     cap = cv2.VideoCapture(0)
-        
+    
+    rospy.set_param('RobotStatus','Free')
+
     while not rospy.is_shutdown():
         robotStatus = rospy.get_param('RobotStatus','Free')
-
-        if robotStatus != "Serving":
-            ret, frame = cap.read()
+        ret, frame = cap.read()
+        if robotStatus != "Serving":   
             frame = cv2.resize(frame, (1280, 720))
             id = ArUco.detectArucoID(
                 frame, marker_size=5, total_markers=50)
-
             if id == None:
                 print("no id")
             else: #aruco detected
                 print(id)
                 pose_response = callGuestAPI(str(id))
                 location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
+                print(location_pub)
                 rospy.set_param('RobotStatus', 'Serving') #set RobotStatus
                 pub.publish(location_pub)
         
