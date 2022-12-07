@@ -31,8 +31,8 @@ def camera_node(path_type): # node name
 
 def callGuestAPI(id):
     try:
-            matrix = rospy.ServiceProxy('GuestAPI', GuestAPI)
-            response = GuestAPI(id)
+            guestAPI = rospy.ServiceProxy('GuestAPI', GuestAPI)
+            response = guestAPI(id)
             return response
     except rospy.ServiceException as e:
             print("GuestAPI call failed: %s"%e)
