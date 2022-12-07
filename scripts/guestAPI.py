@@ -22,7 +22,10 @@ guestDict = {
 }   
 
 seatDict = {
-    "0": Seat('A0', Pose(Point(0,0,0), Quaternion(0,0,0,0)))
+    "0": Seat('A0', Pose(Point(0,0,0), Quaternion(0,0,0,0))),
+    "1": Seat('A1', Pose(Point(1,1,0), Quaternion(1,1,1,1))),
+    "2": Seat('A2', Pose(Point(2,2,0), Quaternion(2,2,2,2)))
+
 }
 
 def guest_api_server():
