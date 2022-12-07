@@ -14,7 +14,7 @@ def camera_node(): # node name
     rate = rospy.Rate(10) # 10hz
 
     cap = cv2.VideoCapture(0)
-        
+    rospy.set_param('RobotStatus','Free')
     while not rospy.is_shutdown():
         robotStatus = rospy.get_param('RobotStatus','Free')
         _, frame = cap.read()
