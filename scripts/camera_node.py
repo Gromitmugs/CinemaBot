@@ -7,7 +7,6 @@ from geometry_msgs.msg import Point, Pose, Quaternion
 
 from cinema_bot.srv import GuestAPI, GuestAPIResponse
 
-
 def camera_node(): # node name
     pub = rospy.Publisher('/SeatLocation', Pose, queue_size=10)
     rospy.init_node('camera_node')
@@ -20,7 +19,7 @@ def camera_node(): # node name
         _, frame = cap.read()
         frame = cv2.resize(frame, (1280, 720))
 
-        if robotStatus != "Serving":    
+        if robotStatus == "Free":    
             id = ArUco.detectArucoID(
                 frame, marker_size=5, total_markers=50)
 
@@ -40,8 +39,13 @@ def camera_node(): # node name
 
             if id == None:
                 print("await for ID")
-            elif rospy.get_param("RecentID","-1") == str(id):
+            elif str(rospy.get_param("RecentID","-1")) == str(id):
+                print("Going Back Home")
+                pose_response = callGuestAPI(str(0))
+                location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
                 rospy.set_param("RobotStatus", "GoHome")
+                pub.publish(location_pub)
+                
             else:
                 print("Invalid ID")
 
