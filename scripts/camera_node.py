@@ -17,7 +17,7 @@ def camera_node(path_type): # node name
         frame = cv2.resize(frame, (1280, 720))
         corners, ids = ArUco.detectAruco(
             frame, marker_size=5, total_markers=50)
-        
+
         if len(ids) > 0: #aruco detected
             pose_response = callGuestAPI(str(ids[0]))
             pub.publish(pose_response)
