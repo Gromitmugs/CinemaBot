@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="DWDvGTDqUMvaEMkSsFly" name="Page-1">
-        <mxGraphModel dx="938" dy="351" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="698" dy="351" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -30,9 +30,6 @@
                             <mxPoint x="430" y="100"/>
                         </Array>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="13" value="- Free&#10;- Serving&#10;- AtDestination" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" parent="1" vertex="1">
-                    <mxGeometry x="240" y="130" width="100" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="SeatLocation (Topic)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="215" y="260" width="155" height="70" as="geometry"/>
@@ -76,7 +73,7 @@
                 <mxCell id="28" value="In-Memory" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
                     <mxGeometry x="740" y="150" width="80" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="29" value="Guest_Message (Topic)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="29" value="GuestMessage (Topic)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="215" y="340" width="155" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="30" value="" style="endArrow=classic;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="5" target="29" edge="1">
@@ -107,11 +104,8 @@
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="34" value="&lt;h1&gt;RobotStatus&lt;/h1&gt;&lt;p&gt;(Param) Indicates the status of the robot&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Free: robot stay still, ArUco has not been scanned&lt;/li&gt;&lt;li&gt;Serving: ArUco scanned, begin/doing navigation&lt;/li&gt;&lt;li&gt;AtDestination: Wait for another ArUco scan&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="570" width="330" height="150" as="geometry"/>
-                </mxCell>
-                <mxCell id="35" value="&lt;h1&gt;Navigation_Node&lt;/h1&gt;&lt;p&gt;(Node) Perform Navigation&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;ol&gt;&lt;li&gt;&lt;br&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="730" width="330" height="150" as="geometry"/>
+                <mxCell id="34" value="&lt;h1&gt;&lt;font color=&quot;#000000&quot;&gt;RobotStatus&lt;/font&gt;&lt;/h1&gt;&lt;p&gt;&lt;font color=&quot;#000000&quot;&gt;(Param) Indicates the status of the robot&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;ol&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;Free: Robot is at home position, waiting for ArUco scan&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;Serving: ArUco scanned, begin/doing navigation&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;AtDestination: Wait for another ArUco scan&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;GoHome: Going to its home position&lt;/font&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="570" width="390" height="180" as="geometry"/>
                 </mxCell>
                 <mxCell id="36" value="" style="endArrow=classic;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="32" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -122,6 +116,12 @@
                             <mxPoint x="80" y="85"/>
                         </Array>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="&lt;h1&gt;&lt;font color=&quot;#000000&quot;&gt;SeatLocation&lt;/font&gt;&lt;/h1&gt;&lt;p&gt;&lt;font color=&quot;#000000&quot;&gt;(Topic, Pose) Location of the Guest's Seat&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="410" y="570" width="390" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="&lt;h1&gt;&lt;font color=&quot;#000000&quot;&gt;GuestMessage&lt;/font&gt;&lt;/h1&gt;&lt;p&gt;&lt;font color=&quot;#000000&quot;&gt;(Topic, String) Welcoming message for guests to be shown on the screen&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="410" y="650" width="390" height="180" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
