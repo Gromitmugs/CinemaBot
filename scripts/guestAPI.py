@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
+import yaml
 from geometry_msgs.msg import Point, Pose, Quaternion
 
 from cinema_bot.srv import GuestAPI, GuestAPIResponse
@@ -30,7 +31,35 @@ seatDict = {
 
 }
 
+def seatDictUpdate(newHome, newA0, newA1, newA2):
+    global seatDict
+    # seatDict["0"] = 
+
 def guest_api_server():
+    global seatDict
+    reply = input("Would you like to set the seat positions? Y/N\n")
+    if reply == "Y":
+        for i in range(4):
+            lines = []
+            print("Please enter Yaml string and press enter Twice:")
+            while True:
+                user_input = input()
+                # 👇️ if user pressed Enter without a value, break out of loop
+                if user_input == '':
+                    break
+                else:
+                    lines.append(user_input + '\n')
+            newPosition = ''.join(lines)
+            # parse string into yaml and save into seatDict
+            newPositionYaml = yaml.safe_load(newPosition)
+            if i == 0:
+                seatDict[str(i)] = Seat('Home', Pose(Point(newPositionYaml["pose"]["position"]["x"],newPositionYaml["pose"]["position"]["y"],newPositionYaml["pose"]["position"]["z"]),Quaternion(newPositionYaml["pose"]["orientation"]["x"],newPositionYaml["pose"]["orientation"]["y"],newPositionYaml["pose"]["orientation"]["z"],newPositionYaml["pose"]["orientation"]["w"])))
+            elif i == 1:
+                 seatDict[str(i)] = Seat('A0', Pose(Point(newPositionYaml["pose"]["position"]["x"],newPositionYaml["pose"]["position"]["y"],newPositionYaml["pose"]["position"]["z"]),Quaternion(newPositionYaml["pose"]["orientation"]["x"],newPositionYaml["pose"]["orientation"]["y"],newPositionYaml["pose"]["orientation"]["z"],newPositionYaml["pose"]["orientation"]["w"])))
+            elif i == 2:
+                 seatDict[str(i)] = Seat('A1', Pose(Point(newPositionYaml["pose"]["position"]["x"],newPositionYaml["pose"]["position"]["y"],newPositionYaml["pose"]["position"]["z"]),Quaternion(newPositionYaml["pose"]["orientation"]["x"],newPositionYaml["pose"]["orientation"]["y"],newPositionYaml["pose"]["orientation"]["z"],newPositionYaml["pose"]["orientation"]["w"])))
+            elif i == 3:
+                 seatDict[str(i)] = Seat('A2', Pose(Point(newPositionYaml["pose"]["position"]["x"],newPositionYaml["pose"]["position"]["y"],newPositionYaml["pose"]["position"]["z"]),Quaternion(newPositionYaml["pose"]["orientation"]["x"],newPositionYaml["pose"]["orientation"]["y"],newPositionYaml["pose"]["orientation"]["z"],newPositionYaml["pose"]["orientation"]["w"])))
     rospy.init_node('guest_api_server')
     s = rospy.Service('guest_api', GuestAPI, handle_guest_api)
     print("Guest API running")
