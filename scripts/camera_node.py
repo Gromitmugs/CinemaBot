@@ -3,7 +3,8 @@
 import cv2
 import rospy
 from aruco import ArUco
-from geometry_msgs.msg import Pose, Point, Quaternion
+from geometry_msgs.msg import Point, Pose, Quaternion
+
 from cinema_bot.srv import GuestAPI, GuestAPIResponse
 
 
@@ -13,13 +14,13 @@ def camera_node(): # node name
     rate = rospy.Rate(10) # 10hz
 
     cap = cv2.VideoCapture(0)
-        
+    rospy.set_param('RobotStatus','Free')
     while not rospy.is_shutdown():
         robotStatus = rospy.get_param('RobotStatus','Free')
+        _, frame = cap.read()
+        frame = cv2.resize(frame, (1280, 720))
 
-        if robotStatus != "Serving":
-            ret, frame = cap.read()
-            frame = cv2.resize(frame, (1280, 720))
+        if robotStatus != "Serving":    
             id = ArUco.detectArucoID(
                 frame, marker_size=5, total_markers=50)
 
@@ -30,8 +31,21 @@ def camera_node(): # node name
                 pose_response = callGuestAPI(str(id))
                 location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
                 rospy.set_param('RobotStatus', 'Serving') #set RobotStatus
+                rospy.set_param('RecentID',str(id))
                 pub.publish(location_pub)
         
+        elif robotStatus == "AtDestination":
+            id = ArUco.detectArucoID(
+                frame, marker_size=5, total_markers=50)
+
+            if id == None:
+                print("await for ID")
+            elif rospy.get_param("RecentID","-1") == str(id):
+                rospy.set_param("RobotStatus", "GoHome")
+            else:
+                print("Invalid ID")
+
+
         if cv2.waitKey(1) == ord('q'):
             break
         rate.sleep()

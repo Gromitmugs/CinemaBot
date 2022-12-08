@@ -1,19 +1,20 @@
+#!/usr/bin/env python3
 # TurtleBot must have minimal.launch & amcl_demo.launch
 # running prior to starting this script
 # For simulation: launch gazebo world & amcl_demo prior to run this script
 
-import rospy
-from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 import actionlib
+import rospy
 from actionlib_msgs.msg import *
-from geometry_msgs.msg import Pose, Point, Quaternion
+from geometry_msgs.msg import Point, Pose, Quaternion
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
 
 class Navigator():
     def __init__(self):
 
         self.goal_sent = False
-        rospy.Subscriber("Guest_Info", Pose, self.callback)
+        rospy.Subscriber("/SeatLocation", Pose, self.callback)
 
         # What to do if shut down (e.g. Ctrl-C or failure)
         rospy.on_shutdown(self.shutdown)
@@ -27,17 +28,33 @@ class Navigator():
         self.move_base.wait_for_server(rospy.Duration(5))
 
     def callback(self, seatLocation):
-        position = {'x': seatLocation.pose.position.x,
-                    'y': seatLocation.pose.position.x}
-        quaternion = {'r1':seatLocation.pose.orientation.x,'r2':seatLocation.pose.orientation.y, 'r3':seatLocation.pose.orientation.z, 'r4':seatLocation.pose.orientation.w}
-        
-        rospy.loginfo("Go to (%s, %s) pose", position['x'], position['y'])
-        success = self.goto(position, quaternion)
+        check = rospy.get_param('RobotStatus', 'Serving')
+        if  check == 'Serving':
+            position = {'x': seatLocation.position.x,
+                    'y': seatLocation.position.y}
+            quaternion = {'r1':seatLocation.orientation.x,'r2':seatLocation.orientation.y, 'r3':seatLocation.orientation.z, 'r4':seatLocation.orientation.w}
+            rospy.loginfo("Go to (%s, %s) pose", position['x'], position['y'])
+            success = self.goto(position, quaternion)
 
-        if success:
-            rospy.loginfo("Hooray, reached the desired pose")
-        else:
-            rospy.loginfo("The base failed to reach the desired pose")
+            if success:
+                rospy.loginfo("Hooray, reached the desired pose, SCAN ID PLEASE" )
+            else:
+                rospy.loginfo("The base failed to reach the desired pose at destination")
+            
+        elif check == 'GoHome':
+            position = {'x': seatLocation.position.x,
+                    'y': seatLocation.position.y}
+            quaternion = {'r1':seatLocation.orientation.x,'r2':seatLocation.orientation.y, 'r3':seatLocation.orientation.z, 'r4':seatLocation.orientation.w}
+
+            rospy.loginfo("Go to (%s, %s) pose", position['x'], position['y'])
+            success = self.goto(position, quaternion)
+
+            if success:
+                rospy.loginfo("Going Home")
+            else:
+                rospy.loginfo("The base failed to reach the desired pose go home")
+
+            rospy.set_param('RobotStatus', 'Free')
 
         
 
@@ -63,6 +80,7 @@ class Navigator():
         if success and state == GoalStatus.SUCCEEDED:
             # We made it!
             result = True
+            rospy.set_param('RobotStatus', 'AtDestination')
         else:
             self.move_base.cancel_goal()
 
@@ -78,7 +96,7 @@ class Navigator():
 
 if __name__ == '__main__':
     try:
-        rospy.init_node('navigator_listener', anonymous=True)
+        #rospy.init_node('navigator_listener', anonymous=True)
         rospy.init_node('nav_test', anonymous=False)
         navigator = Navigator()
 
