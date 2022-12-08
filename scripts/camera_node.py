@@ -20,7 +20,7 @@ def camera_node(): # node name
         _, frame = cap.read()
         frame = cv2.resize(frame, (1280, 720))
 
-        if robotStatus != "Serving":    
+        if robotStatus == "Free":    
             id = ArUco.detectArucoID(
                 frame, marker_size=5, total_markers=50)
 
@@ -41,7 +41,10 @@ def camera_node(): # node name
             if id == None:
                 print("await for ID")
             elif rospy.get_param("RecentID","-1") == str(id):
-                rospy.set_param("RobotStatus", "GoHome")
+                pose_response = callGuestAPI(str(0))
+                location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
+                rospy.set_param('RobotStatus', 'GoHome') #set RobotStatus
+                pub.publish(location_pub)
             else:
                 print("Invalid ID")
 
