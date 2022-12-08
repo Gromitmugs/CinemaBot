@@ -41,6 +41,8 @@ class Navigator():
             else:
                 rospy.loginfo("The base failed to reach the desired pose at destination")
             
+            rospy.set_param('RobotStatus', 'AtDestination')
+
         elif check == 'GoHome':
             position = {'x': seatLocation.position.x,
                     'y': seatLocation.position.y}
@@ -80,7 +82,6 @@ class Navigator():
         if success and state == GoalStatus.SUCCEEDED:
             # We made it!
             result = True
-            rospy.set_param('RobotStatus', 'AtDestination')
         else:
             self.move_base.cancel_goal()
 
