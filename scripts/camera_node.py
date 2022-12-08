@@ -4,12 +4,14 @@ import cv2
 import rospy
 from aruco import ArUco
 from geometry_msgs.msg import Point, Pose, Quaternion
-
+from std_msgs.msg import String
 from cinema_bot.srv import GuestAPI, GuestAPIResponse
+import time
 
 
 def camera_node(): # node name
-    pub = rospy.Publisher('/SeatLocation', Pose, queue_size=10)
+    pub_seatLocation = rospy.Publisher('/SeatLocation', Pose, queue_size=10)
+    pub_playSound = rospy.Publisher('/PlaySound', String, queue_size=10)
     rospy.init_node('camera_node')
     rate = rospy.Rate(10) # 10hz
 
@@ -32,8 +34,11 @@ def camera_node(): # node name
                 location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
                 rospy.set_param('RobotStatus', 'Serving') #set RobotStatus
                 rospy.set_param('RecentID',str(id))
-                pub.publish(location_pub)
-        
+                
+                pub_playSound.publish("New Guest: "+str(pose_response.guestName))
+                time.sleep(3)
+                pub_seatLocation.publish(location_pub)
+
         elif robotStatus == "AtDestination":
             id = ArUco.detectArucoID(
                 frame, marker_size=5, total_markers=50)
@@ -44,7 +49,10 @@ def camera_node(): # node name
                 pose_response = callGuestAPI(str(0))
                 location_pub = parseDataFromGuestAPIResponseToPose(pose_response.seatLocation)
                 rospy.set_param('RobotStatus', 'GoHome') #set RobotStatus
-                pub.publish(location_pub)
+
+                pub_playSound.publish("Going Home")
+                time.sleep(3)
+                pub_seatLocation.publish(location_pub)
             else:
                 print("Invalid ID")
 
