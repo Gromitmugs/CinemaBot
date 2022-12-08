@@ -6,7 +6,7 @@ import numpy as np
 
 
 class ArUco:
-    def detectAruco(frame, marker_size=6, total_markers=250):
+    def detectArucoID(frame, marker_size=6, total_markers=250):
 
         arucoType = f"DICT_{marker_size}X{marker_size}_{total_markers}"
 
@@ -45,7 +45,9 @@ class ArUco:
         arucoParams = aruco.DetectorParameters_create()
 
         # detect ArUCo markers in the input frame
-        corners, ids, _ = aruco.detectMarkers(
+        _, ids, _ = aruco.detectMarkers(
             frame, arucoDict, parameters=arucoParams)
 
-        return corners, ids
+        if ids == None:
+            return None
+        return ids[0][0]
