@@ -1,0 +1,6 @@
+<launch>
+    
+    <node name="navigation_node" pkg="cinema_bot" type="Navigator.py" output="screen"/>
+    <node name="guest_api_service" pkg="cinema_bot" type="guestAPI.py"/>
+    <node name="rviz"/>
+</launch>
