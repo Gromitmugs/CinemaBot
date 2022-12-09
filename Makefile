@@ -8,7 +8,7 @@ laptop-launch:
 bringup:
 	roslaunch turtlebot3_bringup turtlebot3_robot.launch
 
-.PHONY: map_calibrate
+.PHONY: map-calibrate
 
 map_calibrate:
 	roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$$HOME/map.yaml
