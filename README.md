@@ -13,6 +13,8 @@
 
 ### Running the program
 
+Assuming the current directory is `CinemaBot`
+
 #### TurtleBot (SSH)
 1. ``make bringup``
 2. ``make camera-node-init``
@@ -20,7 +22,6 @@
 
 #### Remote PC
 
-1. ``cd ~/CinemaBot``
 1.  ``make map-creation``
 1.  ``make map-calibrate``
 2.  ``make laptop-launch``
