@@ -27,4 +27,6 @@ Assuming the current directory is `CinemaBot`
 2.  ``make laptop-launch``
 3.   `` make voice-node-init``
 
+### Monitoring Robot Status
 
+1. ``watch rosparam get RobotStatus``
