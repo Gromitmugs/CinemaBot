@@ -9,7 +9,7 @@
 
 ### System Architecture
 
-![System Architecture](.\architecture\architecture.png)
+![System Architecture](./architecture/architecture.png)
 
 ### Running the program
 
